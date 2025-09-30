@@ -80,13 +80,13 @@ This project uses **JWT (JSON Web Tokens)** for authentication.
 Obtain tokens via:
 
 ```
-POST /api/token/
+POST /api/user/token/
 ```
 
 Refresh tokens via:
 
 ```
-POST /api/token/refresh/
+POST /api/user/token/refresh/
 ```
 
 Use the token in the `Authorization` header:
