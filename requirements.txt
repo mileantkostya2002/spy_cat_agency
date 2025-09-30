@@ -1,0 +1,9 @@
+asgiref==3.9.1
+attrs==25.3.0
+Django==5.2.5
+djangorestframework==3.16.1
+djangorestframework_simplejwt==5.5.1
+drf-spectacular==0.28.0
+sqlparse==0.5.3
+
+django-debug-toolbar
