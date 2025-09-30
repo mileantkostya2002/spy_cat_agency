@@ -1,3 +1,8 @@
 .venv/
 ..migrations/
-..__pychache__/
+user/__pycache__/
+config/__pycache__
+cats/migrations/
+user/migrations/
+cats/__pycache__
+.idea/
