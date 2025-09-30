@@ -1,4 +1,4 @@
-# spy_cat_agency# 🐾 Spy Cats Service API
+🐾 Spy Cats Service API
 
 **Spy Cats Service** is a REST API for managing secret cat agents, their missions, and their targets.
 The project is built with **Django + DRF**, supports **JWT authentication**, and includes interactive **Swagger documentation**.
