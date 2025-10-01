@@ -39,11 +39,11 @@ class TargetViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminOrIfAuthenticatedReadOnly,)
 
     def get_serializer_class(self):
-        if action == 'create':
+        if self.action == 'create':
             return TargetCreateSerializer
-        if action == 'update' or 'partial_update':
+        if self.action == 'update' or 'partial_update':
             return TargetUpdateSerializer
-        if action == 'list':
+        if self.action == 'list':
             return TargetListSerializer
         return TargetSerializer
 
@@ -64,41 +64,41 @@ class MissionViewSet(viewsets.ModelViewSet):
             return MissionCreateSerializer
         return MissionSerializer
 
-@action(detail=True, methods=['post'])
-def assign_cat(self, request, pk=None):
-    mission = self.get_object()
+    @action(detail=True, methods=['post'])
+    def assign_cat(self, request, pk=None):
+        mission = self.get_object()
+    
+        if mission.cat is not None:
+            return Response(
+                {"error": "Mission already has a cat assigned"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+    
+        serializer = MissionAssignCatSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+    
+        cat = SpyCat.objects.get(id=serializer.validated_data['cat_id'])
+        mission.cat = cat
+        mission.save()
+    
+        return Response(MissionSerializer(mission).data)
+    
 
-    if mission.cat is not None:
-        return Response(
-            {"error": "Mission already has a cat assigned"},
-            status=status.HTTP_400_BAD_REQUEST
-        )
-
-    serializer = MissionAssignCatSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-
-    cat = SpyCat.objects.get(id=serializer.validated_data['cat_id'])
-    mission.cat = cat
-    mission.save()
-
-    return Response(MissionSerializer(mission).data)
-
-
-@action(detail=True, methods=['post'])
-def check_targets(self, request, pk=None):
-    mission = self.get_object()
-
-    if mission.target is not None:
-        return Response(
-            {"error": "Target already has a mission assigned"},
-            status=status.HTTP_400_BAD_REQUEST
-        )
-
-    serializer = MissionUniqueTargetSerializer(data=request.data)
-    serializer.is_valid(raise_exception=True)
-
-    target = Target.objects.get(id=serializer.validated_data['target_id'])
-    mission.target = target
-    mission.save()
-
-    return Response(MissionSerializer(mission).data)
+    @action(detail=True, methods=['post'])
+    def check_targets(self, request, pk=None):
+        mission = self.get_object()
+    
+        if mission.target is not None:
+            return Response(
+                {"error": "Target already has a mission assigned"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+    
+        serializer = MissionUniqueTargetSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+    
+        target = Target.objects.get(id=serializer.validated_data['target_id'])
+        mission.target = target
+        mission.save()
+    
+        return Response(MissionSerializer(mission).data)
